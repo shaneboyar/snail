@@ -203,7 +203,7 @@ const Authentication = ({ onLogin }) => {
   const [state, setState] = useState('signIn');
 
   const signUpAction = inputs => {
-    fetch('http://localhost:3001/users', {
+    fetch('/users', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(inputs),
@@ -216,7 +216,7 @@ const Authentication = ({ onLogin }) => {
   };
 
   const signInAction = inputs => {
-    fetch('http://localhost:3001/auth/login', {
+    fetch('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(inputs),

@@ -12,7 +12,7 @@ const PostMachine = ({ jwt }) => {
   const inputEl = useRef(null);
 
   const handleSubmit = () => {
-    fetch('http://localhost:3001/posts', {
+    fetch('/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: jwt },
       body: JSON.stringify({
