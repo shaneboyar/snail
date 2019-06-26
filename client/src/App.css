@@ -1,0 +1,58 @@
+.App {
+  text-align: center;
+  color: #000;
+}
+
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.Login-container {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+}
+
+.Main-input {
+  font-size: 72px;
+  border: none;
+  text-align: center;
+  font-family: "Roboto";
+  color: gainsboro;
+  width: 75%;
+  resize: none;
+}
+
+.Main-input:focus {
+  outline: none;
+}
+
+.Input-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
