@@ -1,0 +1,25 @@
+.Main-input {
+  font-size: 72px;
+  border: none;
+  text-align: center;
+  font-family: "Roboto";
+  color: gainsboro;
+  width: 75%;
+  resize: none;
+}
+
+.Main-input:focus {
+  outline: none;
+}
+
+.Input-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+button {
+  border: none;
+  outline: none;
+}

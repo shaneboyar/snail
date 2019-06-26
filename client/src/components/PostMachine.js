@@ -1,17 +1,34 @@
 import React, { useState, useRef } from 'react';
 import { useTrail, animated } from 'react-spring';
 import Textarea from 'react-textarea-autosize';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import './PostMachine.css';
 
 const AnimatedTextArea = animated(Textarea);
 
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  input: {
+    display: 'none',
+  },
+}));
+
 const PostMachine = ({ jwt }) => {
+  const classes = useStyles();
   const MAX_LENGTH = 140;
   const [toggle, set] = useState(true);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const inputEl = useRef(null);
 
   const handleSubmit = () => {
+    setLoading(true);
     fetch('/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: jwt },
@@ -21,6 +38,7 @@ const PostMachine = ({ jwt }) => {
         },
       }),
     });
+    setLoading(false);
     set(false);
   };
 
@@ -29,11 +47,24 @@ const PostMachine = ({ jwt }) => {
     set(true);
     inputEl.current.focus();
   };
+
   const handleChange = event => {
     if (event.target.value.length > MAX_LENGTH) {
       return null;
     }
     setInput(event.target.value);
+  };
+
+  const renderButtonContent = () => {
+    if (loading) {
+      return <CircularProgress />;
+    } else {
+      if (toggle) {
+        return 'Send';
+      } else {
+        return 'Sent';
+      }
+    }
   };
 
   const config = { mass: 5, tension: 2000, friction: 200 };
@@ -69,7 +100,14 @@ const PostMachine = ({ jwt }) => {
           }}
         />
       ))}
-      <button onClick={handleSubmit}>{toggle ? 'Send' : 'Sent'}</button>
+      <button onClick={handleSubmit} />
+      <Button
+        variant="outlined"
+        disabled={input.length < 1}
+        className={classes.button}
+      >
+        {renderButtonContent()}
+      </Button>
     </div>
   );
 };

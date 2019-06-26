@@ -1,0 +1,15 @@
+.logoWrapper {
+  padding-bottom: 10px;
+  height: 70px;
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: steelblue;
+  border-radius: 65px;
+}
+
+.snailImage {
+  height: 100px;
+  width: 100px;
+}

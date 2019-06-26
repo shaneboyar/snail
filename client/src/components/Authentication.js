@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -7,12 +6,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { useForm } from './customHooks';
+import { useForm } from '../customHooks';
+import Logo from './Logo';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -27,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(5),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
@@ -47,9 +46,7 @@ const SignIn = ({ switchToSignUp, signInAction }) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <Logo />
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
@@ -81,7 +78,7 @@ const SignIn = ({ switchToSignUp, signInAction }) => {
             value={inputs.password}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
+            control={<Checkbox value="remember" color="primary" disabled />}
             label="Remember me"
           />
           <Button
@@ -120,9 +117,7 @@ const SignUp = ({ switchToSignIn, signUpAction }) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        <Logo />
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
@@ -201,6 +196,7 @@ const SignUp = ({ switchToSignIn, signUpAction }) => {
 
 const Authentication = ({ onLogin }) => {
   const [state, setState] = useState('signIn');
+  const [toast, setToast] = useState(null);
 
   const signUpAction = inputs => {
     fetch('/users', {
@@ -210,6 +206,7 @@ const Authentication = ({ onLogin }) => {
     })
       .then(resp => resp.json())
       .then(data => {
+        setToast('Account created. Please log in.');
         setState('signIn');
       })
       .catch(e => console.log('error: ', e));
@@ -228,16 +225,21 @@ const Authentication = ({ onLogin }) => {
       .catch(e => console.log('error: ', e));
   };
 
-  return state === 'signIn' ? (
-    <SignIn
-      switchToSignUp={() => setState('signUp')}
-      signInAction={inputs => signInAction(inputs)}
-    />
-  ) : (
-    <SignUp
-      switchToSignIn={() => setState('signIn')}
-      signUpAction={inputs => signUpAction(inputs)}
-    />
+  return (
+    <div>
+      <div>{toast}</div>
+      {state === 'signIn' ? (
+        <SignIn
+          switchToSignUp={() => setState('signUp')}
+          signInAction={inputs => signInAction(inputs)}
+        />
+      ) : (
+        <SignUp
+          switchToSignIn={() => setState('signIn')}
+          signUpAction={inputs => signUpAction(inputs)}
+        />
+      )}
+    </div>
   );
 };
 

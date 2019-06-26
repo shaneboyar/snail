@@ -3,7 +3,12 @@ class UsersController < ApplicationController
   before_action :find_user, except: %i[create index]
 
   def index
-    @users = User.all
+    @users = nil
+    if params[:query]
+      @users = User.select(:id, :name).find_by_email(params[:query])
+    else
+      @users = User.all
+    end
     render json: @users, status: :ok
   end
 
@@ -12,9 +17,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    puts user_params
     @user = User.new(user_params)
-    puts @user.inspect
     if @user.save
       render json: @user, status: :created
     else
@@ -44,7 +47,7 @@ class UsersController < ApplicationController
 
   def user_params
     params.permit(
-      :avatar, :name, :username, :email, :password, :password_confirmation
+      :avatar, :name, :username, :email, :password, :password_confirmation, :query
     )
   end
 end
