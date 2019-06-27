@@ -2,14 +2,14 @@ class RelationshipsController < ApplicationController
   before_action :authorize_request
 
   def index
-    render json: {follows: @current_user.following.pluck(:id)}, status: :ok
+    render json: {follows: @current_user.following.select(:id, :name)}, status: :ok
   end
 
   def create
     begin 
       @follow = User.find(relationship_params["id"])
       @current_user.follow(@follow)
-      render json: {follows: @current_user.following.pluck(:id)}, status: :ok
+      render json: {follows: @current_user.following.select(:id, :name)}, status: :ok
     rescue StandardError => e
       render json: {error: e}
     end
@@ -19,7 +19,7 @@ class RelationshipsController < ApplicationController
     begin 
       @follow = User.find(relationship_params["id"])
       @current_user.unfollow(@follow)
-      render json: {follows: @current_user.following.pluck(:id)}, status: :ok
+      render json: {follows: @current_user.following.select(:id, :name)}, status: :ok
     rescue StandardError => e
       render json: {error: e}
     end

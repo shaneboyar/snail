@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import _ from 'lodash';
 
 import { useTrail, animated } from 'react-spring';
 import Textarea from 'react-textarea-autosize';
@@ -104,7 +105,6 @@ const AddFriend = ({ jwt }) => {
     })
       .then(resp => resp.json())
       .then(data => {
-        console.log('data: ', data);
         setFollowing(data['follows']);
         setLoading(false);
       })
@@ -140,9 +140,19 @@ const AddFriend = ({ jwt }) => {
   };
 
   const renderAddFriendButtonContent = id => {
-    if (following.includes(result.id)) return 'Friend Already Added';
+    if (_.find(following, ['id', id])) return 'Friend Already Added';
     return loading ? <CircularProgress /> : 'Add Friend';
   };
+
+  const renderCurrentFriends = () =>
+    following.map(friend => {
+      return (
+        <div className="Friend-container" key={friend.id}>
+          <h4>{friend.name}</h4>
+          <CloseIcon onClick={() => removeFriend(friend.id)} />
+        </div>
+      );
+    });
 
   return (
     <div className="AddFriend-container">
@@ -183,15 +193,13 @@ const AddFriend = ({ jwt }) => {
               variant="outlined"
               className={classes.button}
               onClick={() => addFriend(result.id)}
-              disabled={following.includes(result.id)}
+              disabled={!!_.find(following, ['id', result.id])}
             >
               {renderAddFriendButtonContent(result.id)}
             </Button>
-            {following.includes(result.id) && (
-              <CloseIcon onClick={() => removeFriend(result.id)} />
-            )}
           </div>
         )}
+        {following.length > 0 && renderCurrentFriends()}
       </div>
     </div>
   );
