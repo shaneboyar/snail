@@ -78,7 +78,14 @@ const SignIn = ({ switchToSignUp, signInAction }) => {
             value={inputs.password}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" disabled />}
+            control={
+              <Checkbox
+                onChange={(event, checked) => handleInputChange(event, checked)}
+                value="rememberMe"
+                name="rememberMe"
+                color="primary"
+              />
+            }
             label="Remember me"
           />
           <Button
@@ -220,7 +227,7 @@ const Authentication = ({ onLogin }) => {
     })
       .then(resp => resp.json())
       .then(data => {
-        onLogin(data.token);
+        onLogin(data.token, inputs['rememberMe']);
       })
       .catch(e => console.log('error: ', e));
   };

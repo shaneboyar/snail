@@ -8,11 +8,11 @@ export const useForm = callback => {
       callback(inputs);
     }
   };
-  const handleInputChange = event => {
+  const handleInputChange = (event, checked) => {
     event.persist();
     setInputs(inputs => ({
       ...inputs,
-      [event.target.name]: event.target.value,
+      [event.target.name]: checked || event.target.value,
     }));
   };
   return {

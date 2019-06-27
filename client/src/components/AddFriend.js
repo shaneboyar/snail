@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import CloseIcon from '@material-ui/icons/Close';
 import Button from '@material-ui/core/Button';
-import Input from '@material-ui/core/Input';
 import { makeStyles } from '@material-ui/core/styles';
+
+import { useTrail, animated } from 'react-spring';
+import Textarea from 'react-textarea-autosize';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+import './PostMachine.css';
+
+const AnimatedTextArea = animated(Textarea);
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -13,19 +21,66 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AddFriend = ({ jwt }) => {
-  const [query, setQuery] = useState('');
+  const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const classes = useStyles();
+  const [toggle, set] = useState(true);
+  const [input, setInput] = useState('');
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    async function fetchFollowing() {
+      try {
+        const resp = await fetch('/relationships', {
+          headers: { Authorization: jwt },
+        });
+        const data = await resp.json();
+        setFollowing(data['follows']);
+      } catch (e) {
+        console.log('error: ', e);
+      }
+    }
+    fetchFollowing();
+  }, [jwt]); // Or [] if effect doesn't need props or state
+
+  const reset = () => {
+    setInput('');
+    set(true);
+    inputEl.current.focus();
+  };
+
+  const handleChange = event => {
+    if (event.target.value === '\n') {
+      return null;
+    }
+
+    setInput(event.target.value);
+  };
+
+  const renderButtonContent = () => {
+    return loading ? <CircularProgress /> : 'Search';
+  };
+
+  const config = { mass: 5, tension: 2000, friction: 200 };
+
+  const trail = useTrail(1, {
+    config,
+    opacity: toggle ? 1 : 0,
+    y: toggle ? 0 : -200,
+    from: { opacity: 0, y: -200, height: 0 },
+    onRest: () => {
+      if (!toggle) reset();
+    },
+  });
 
   const search = () => {
     setLoading(true);
-    fetch(`/users?query=${query}`, {
+    fetch(`/users?query=${input}`, {
       headers: { Authorization: jwt },
     })
       .then(resp => resp.json())
       .then(data => {
-        console.log('data: ', data);
         setResult(data);
         setLoading(false);
       })
@@ -33,26 +88,111 @@ const AddFriend = ({ jwt }) => {
         console.log('error: ', e);
         setLoading(false);
       });
+    setInput('');
+  };
+
+  const addFriend = id => {
+    setLoading(true);
+    fetch(`/relationships`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: jwt },
+      body: JSON.stringify({
+        relationship: {
+          id,
+        },
+      }),
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        console.log('data: ', data);
+        setFollowing(data['follows']);
+        setLoading(false);
+      })
+      .catch(e => {
+        console.log('error: ', e);
+        setLoading(false);
+      });
+    setInput('');
+  };
+
+  const removeFriend = id => {
+    setLoading(true);
+    fetch(`/relationships/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', Authorization: jwt },
+      body: JSON.stringify({
+        relationship: {
+          id,
+        },
+      }),
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        console.log('data: ', data);
+        setFollowing(data['follows']);
+        setLoading(false);
+      })
+      .catch(e => {
+        console.log('error: ', e);
+        setLoading(false);
+      });
+    setInput('');
+  };
+
+  const renderAddFriendButtonContent = id => {
+    if (following.includes(result.id)) return 'Friend Already Added';
+    return loading ? <CircularProgress /> : 'Add Friend';
   };
 
   return (
-    <div>
-      <Input
-        className={classes.input}
-        value={query}
-        onChange={event => {
-          setQuery(event.target.value);
-        }}
-      />
-      <Button
-        variant="outlined"
-        disabled={query.length < 1}
-        className={classes.button}
-        onClick={() => search()}
-      >
-        Search
-      </Button>
-      {result && <div>{result.name}</div>}
+    <div className="AddFriend-container">
+      <div className="Input-container">
+        {trail.map(({ y, height, ...rest }, index) => (
+          <AnimatedTextArea
+            autoFocus
+            inputRef={inputEl}
+            className="Main-input"
+            style={{
+              ...rest,
+              transform: y.interpolate(y => `translate3d(0,${y}px,0)`),
+            }}
+            key={1}
+            value={input}
+            onChange={handleChange}
+            onKeyDown={e => {
+              if (e.key === 'Enter') {
+                search();
+              }
+            }}
+          />
+        ))}
+        <Button
+          variant="outlined"
+          disabled={input.length < 1}
+          className={classes.button}
+          onClick={search}
+        >
+          {renderButtonContent()}
+        </Button>
+      </div>
+      <div className="Result-container">
+        {result && (
+          <div className="Friend-container">
+            <h4>{result.name}</h4>
+            <Button
+              variant="outlined"
+              className={classes.button}
+              onClick={() => addFriend(result.id)}
+              disabled={following.includes(result.id)}
+            >
+              {renderAddFriendButtonContent(result.id)}
+            </Button>
+            {following.includes(result.id) && (
+              <CloseIcon onClick={() => removeFriend(result.id)} />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

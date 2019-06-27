@@ -100,11 +100,11 @@ const PostMachine = ({ jwt }) => {
           }}
         />
       ))}
-      <button onClick={handleSubmit} />
       <Button
         variant="outlined"
         disabled={input.length < 1}
         className={classes.button}
+        onClick={handleSubmit}
       >
         {renderButtonContent()}
       </Button>

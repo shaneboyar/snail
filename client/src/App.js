@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PeopleIcon from '@material-ui/icons/People';
+import CloseIcon from '@material-ui/icons/Close';
 
 import './App.css';
 import Authentication from './components/Authentication';
@@ -8,7 +9,7 @@ import AddFriend from './components/AddFriend';
 
 function App() {
   const [view, setView] = useState('post');
-  const [jwt, setJwt] = useState(null);
+  const [jwt, setJwt] = useState(localStorage.getItem('jwt') || null);
 
   const renderView = () => {
     if (jwt) {
@@ -18,19 +19,32 @@ function App() {
         <AddFriend jwt={jwt} />
       );
     } else {
-      return <Authentication onLogin={token => setJwt(token)} />;
+      return (
+        <Authentication
+          onLogin={(token, rememberMe = false) => {
+            if (rememberMe) {
+              localStorage.setItem('jwt', token);
+            }
+            setJwt(token);
+          }}
+        />
+      );
     }
   };
 
+  const renderMenuIcon = () =>
+    view === 'post' ? (
+      <PeopleIcon
+        onClick={() => setView('profile')}
+        className="addFriendIcon"
+      />
+    ) : (
+      <CloseIcon onClick={() => setView('post')} className="addFriendIcon" />
+    );
+
   return (
     <div className="App">
-      <div className="Login-container">
-        {jwt && (
-          <h4>
-            <PeopleIcon onClick={() => setView('profile')} />
-          </h4>
-        )}
-      </div>
+      <div className="Login-container">{jwt && renderMenuIcon()}</div>
       <header className="App-header">{renderView()}</header>
     </div>
   );

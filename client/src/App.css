@@ -16,6 +16,10 @@
   color: #61dafb;
 }
 
+.addFriendIcon:hover {
+  cursor: pointer;
+}
+
 .Login-container {
   position: absolute;
   top: 32px;

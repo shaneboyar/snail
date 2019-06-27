@@ -12,6 +12,25 @@
   outline: none;
 }
 
+.AddFriend-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.Result-container {
+  display: flex;
+  width: 75%;
+}
+
+.Friend-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .Input-container {
   display: flex;
   width: 100%;
