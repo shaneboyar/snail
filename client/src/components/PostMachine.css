@@ -23,6 +23,8 @@
 
 .Result-container {
   display: flex;
+  position: absolute;
+  bottom: 16px;
   flex-direction: column;
   width: 75%;
 }

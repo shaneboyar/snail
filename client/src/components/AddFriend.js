@@ -159,7 +159,7 @@ const AddFriend = ({ jwt }) => {
     <div className="AddFriend-container">
       <div className="Input-container">
         {trail.map(({ y, height, ...rest }, index) => (
-          <AnimatedTextArea
+          <animated.input
             autoFocus
             inputRef={inputEl}
             className="Main-input"
