@@ -12,7 +12,11 @@ function App() {
   const [jwt, setJwt] = useState(null);
 
   useEffect(() => {
-    const tokenObject = JSON.parse(localStorage.getItem('jwt'));
+    const localToken = localStorage.getItem('jwt') || null;
+    if (!localToken) {
+      return undefined;
+    }
+    const tokenObject = JSON.parse(localStorage.getItem('jwt') || null);
     const { token, exp } = tokenObject;
     if (new Date() < new Date(exp)) {
       setJwt(token);
