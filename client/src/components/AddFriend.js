@@ -94,6 +94,7 @@ const AddFriend = ({ jwt }) => {
 
   const addFriend = id => {
     setLoading(true);
+    setResult(null);
     fetch(`/relationships`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: jwt },

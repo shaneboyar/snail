@@ -227,7 +227,7 @@ const Authentication = ({ onLogin }) => {
     })
       .then(resp => resp.json())
       .then(data => {
-        onLogin(data.token, inputs['rememberMe']);
+        onLogin(data, inputs['rememberMe']);
       })
       .catch(e => console.log('error: ', e));
   };

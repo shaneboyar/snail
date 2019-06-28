@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PeopleIcon from '@material-ui/icons/People';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -9,7 +9,17 @@ import AddFriend from './components/AddFriend';
 
 function App() {
   const [view, setView] = useState('post');
-  const [jwt, setJwt] = useState(localStorage.getItem('jwt') || null);
+  const [jwt, setJwt] = useState(null);
+
+  useEffect(() => {
+    const tokenObject = JSON.parse(localStorage.getItem('jwt'));
+    const { token, exp } = tokenObject;
+    if (new Date() < new Date(exp)) {
+      setJwt(token);
+    } else {
+      localStorage.removeItem('jwt');
+    }
+  }, []);
 
   const renderView = () => {
     if (jwt) {
@@ -21,9 +31,11 @@ function App() {
     } else {
       return (
         <Authentication
-          onLogin={(token, rememberMe = false) => {
+          onLogin={(data, rememberMe = false) => {
+            const { token, exp } = data;
             if (rememberMe) {
-              localStorage.setItem('jwt', token);
+              const savedToken = { token, exp };
+              localStorage.setItem('jwt', JSON.stringify(savedToken));
             }
             setJwt(token);
           }}
