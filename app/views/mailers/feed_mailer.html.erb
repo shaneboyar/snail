@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset='UTF-8'>
+    <link href="https://fonts.googleapis.com/css?family=Special+Elite&display=swap" rel="stylesheet">
+    <title>Lob.com Sample Reminder Letter</title>
+    <style>
+      *, *:before, *:after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+      }
+      body {
+        width: 8.5in;
+        height: 11in;
+        margin: 0;
+        font-family: 'Special Elite', 'Courier', serif;
+      }
+      .page {
+        page-break-after: always;
+        position: relative;
+        width: 8.5in;
+        height: 11in;
+      }
+      .page-content {
+        position: absolute;
+        width: 8.125in;
+        height: 10.625in;
+        left: 0.1875in;
+        top: 0.1875in;
+        background-color: rgba(0,0,0,0);
+      }
+      .text {
+        position: relative;
+        left: 55px;
+        top: 355px;
+      }
+    </style>
+    </head>
+    <body>
+  <div class='page'>
+    <div class='page-content'>
+      <div class='text'>
+        <% @friends.each do |friend| %>
+          <h1><%= friend.name %></h1>
+          <% friend.posts.each do |post| %>
+            <div><%= post.created_at %>: <%= post.content %></div>  
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </body>
+</html>
