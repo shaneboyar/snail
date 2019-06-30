@@ -5,25 +5,12 @@ class CreateFeedMailer
     @filename = "#{Rails.root}/tmp/mail/#{@user.name.parameterize}.html"
   end
 
-  def create
-    view = ActionView::Base.new(ActionController::Base.view_paths, {
-      user: @user,
-      friends: @user.following.includes(:posts),
-      posts: @user.feed.includes(:user)
-    })
-
-    content = view.render(file: "mailers/feed_mailer.html.erb")
-
-    file = File.open(@filename, 'w+')
-    file << content
-    file.close
-  end
-
   def send
+    create
     @lob.letters.create(
       description: "Demo Letter",
       to: {
-        name: "Test User",
+        name: @user.name,
         address_line1: "185 Berry St",
         address_line2: "# 6100",
         address_city: "San Francisco",
@@ -34,5 +21,21 @@ class CreateFeedMailer
       file: File.open(@filename),
       color: false
     )
+    File.delete(@filename) if File.exist?(@filename)
+  end
+
+  # private
+
+  def create
+    view = ActionView::Base.new(ActionController::Base.view_paths, {
+      user: @user,
+      feed: @user.feed
+    })
+
+    content = view.render(file: "mailers/feed_mailer.html.erb")
+
+    file = File.open(@filename, 'w+')
+    file << content
+    file.close
   end
 end

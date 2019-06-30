@@ -1,8 +1,9 @@
 class PrintAscii
-  def initialize(image_name = "pickles.jpeg", width = 100)
+  def initialize(image_name, width = 100)
+    return unless File.exist?("#{Rails.root}/app/assets/images/#{@image_name}")
     @image_name = image_name
     @width = width
-    @gray_ramp = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1[][]?-_+~<>i!lI;:,\"^`'. "
+    @gray_ramp = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1[][]?-_+~<>i!lI;:,\"^`'  "
     @ramp_length = @gray_ramp.length;
     @output = ""
     @max_width = 100;
@@ -16,9 +17,7 @@ class PrintAscii
     width, height = clampDimensions(image.columns, image.rows)   
     image = image.resize_to_fit(width, height)
     image_height = image.rows
-    image_width = image.columns
-    puts "image.height: #{image_height}, width: #{image_width}"
-    
+    image_width = image.columns    
     # Get the pixel array
     image.each_pixel do |pixel, col, row|
       average = (pixel.red/257 + pixel.green/257 + pixel.blue/257)/3
@@ -28,22 +27,27 @@ class PrintAscii
             @output += "\n"
         end
     end
-    @output
-    create_file
+    # @output
+    # create_file
   end
 
-  private
+  # private
   
   def get_character_for_grayscale(value)
     @gray_ramp[((@ramp_length - 1).ceil * value / 255)];
   end 
 
+  def create_html
+    print
+    return "<div class='ad'><div>This letter has been brought to you by the fine folks at:</div><pre style='font-size:6px;'>#{@output}</pre></div>".html_safe
+  end
+
   def create_file
-    file = File.open("#{Rails.root}/app/services/temp/mail.html", 'w+')
+    file = File.open("#{Rails.root}/tmp/ascii.html", 'w+')
     file << "<html>
     <head>
     <meta charset='UTF-8'>
-    <link href='https://fonts.googleapis.com/css?family=Crimson+Text:400,700' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Special+Elite&display=swap' rel='stylesheet'>
     <title>Lob.com Sample Reminder Letter</title>
     <style>
       *, *:before, *:after {
@@ -55,7 +59,7 @@ class PrintAscii
         width: 8.5in;
         height: 11in;
         margin: 0;
-        font-family: 'Crimson Text';
+        font-family: 'Special Elite';
       }
       .page {
         page-break-after: always;
@@ -71,18 +75,20 @@ class PrintAscii
         top: 0.1875in;
         background-color: rgba(0,0,0,0);
       }
-      .text {
+      .ad {
         position: relative;
         left: 55px;
         top: 355px;
+        display: flex;
+        align-items: center;
       }
     </style>
     </head>
     <body>
   <div class='page'>
     <div class='page-content'>
-      <div class='text'>"
-    file << "<pre style='font-size:6px;'>#{@output}</pre>"
+      <div class='ad'>"
+    file << "<div>This letter has been brought to you by the fine folks at:</div><pre style='font-size:6px;'>#{@output}</pre>"
     file << "</div></div></body></html>"
     file.close
   end
