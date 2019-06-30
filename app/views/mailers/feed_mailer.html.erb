@@ -23,32 +23,64 @@
         width: 8.5in;
         height: 11in;
       }
+      .page:first-of-type .page-content {
+        top: 3.7in !important;
+        height: 6.925in !important;
+      }
       .page-content {
         position: absolute;
         width: 8.125in;
         height: 10.625in;
         left: 0.1875in;
         top: 0.1875in;
+        bottom: 0.1875in;
         background-color: rgba(0,0,0,0);
       }
-      .text {
-        position: relative;
-        left: 55px;
-        top: 355px;
+      .post {
+        font-size: 0.1.75in;
+        line-height: 0.3in;
+        margin-left: 55px;
+      }
+      .friend-name {
+        font-size: 0.5in;
+        line-height: 0.6in;
+        margin-left: 55px;
       }
     </style>
     </head>
     <body>
+  <% height = 0 %>
+  <% page = 1 %>
   <div class='page'>
     <div class='page-content'>
-      <div class='text'>
         <% @friends.each do |friend| %>
-          <h1><%= friend.name %></h1>
+          <div class="friend-name"><%= friend.name %></div>
+          <% height += 0.6 %>
+          <% if((page == 1 && height > 6) || height > 9) %>
+            </div>
+            </div>
+            <div class='page'>
+            <div class='page-content'>
+            <% height = 0 %>
+            <% page += 1 %>
+          <% end %>
           <% friend.posts.each do |post| %>
-            <div><%= post.created_at %>: <%= post.content %></div>  
+            <div class="post"><%= post.created_at %>: <%= post.content %></div> 
+            <% if post.content.length > 74 %>
+            <% height += 0.6 %> 
+            <% else %>
+            <% height += 0.3 %> 
+            <% end %>
+            <% if((page == 1 && height > 6) || height > 9) %>
+              </div>
+              </div>
+              <div class='page'>
+              <div class='page-content'>
+              <% height = 0 %>
+              <% page += 1 %>
+            <% end %>
           <% end %>
         <% end %>
-      </div>
     </div>
   </body>
 </html>
