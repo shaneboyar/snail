@@ -10,7 +10,18 @@ class PrintAscii
     @max_height = 50;
   end
 
-  def print
+  def create_html
+    output_ascii
+    return "<div class='ad'><div>This letter has been brought to you by the fine folks at:</div><pre style='font-size:6px;'>#{@output}</pre></div>".html_safe
+  end
+
+  private
+  
+  def get_character_for_grayscale(value)
+    @gray_ramp[((@ramp_length - 1).ceil * value / 255)];
+  end 
+
+  def output_ascii
     # Open the resource
     image = Magick::Image.read("#{Rails.root}/app/assets/images/#{@image_name}").first
     image = image.quantize(number_colors=256, colorspace=Magick::GRAYColorspace) 
@@ -27,70 +38,6 @@ class PrintAscii
             @output += "\n"
         end
     end
-    # @output
-    # create_file
-  end
-
-  # private
-  
-  def get_character_for_grayscale(value)
-    @gray_ramp[((@ramp_length - 1).ceil * value / 255)];
-  end 
-
-  def create_html
-    print
-    return "<div class='ad'><div>This letter has been brought to you by the fine folks at:</div><pre style='font-size:6px;'>#{@output}</pre></div>".html_safe
-  end
-
-  def create_file
-    file = File.open("#{Rails.root}/tmp/ascii.html", 'w+')
-    file << "<html>
-    <head>
-    <meta charset='UTF-8'>
-    <link href='https://fonts.googleapis.com/css?family=Special+Elite&display=swap' rel='stylesheet'>
-    <title>Lob.com Sample Reminder Letter</title>
-    <style>
-      *, *:before, *:after {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-      }
-      body {
-        width: 8.5in;
-        height: 11in;
-        margin: 0;
-        font-family: 'Special Elite';
-      }
-      .page {
-        page-break-after: always;
-        position: relative;
-        width: 8.5in;
-        height: 11in;
-      }
-      .page-content {
-        position: absolute;
-        width: 8.125in;
-        height: 10.625in;
-        left: 0.1875in;
-        top: 0.1875in;
-        background-color: rgba(0,0,0,0);
-      }
-      .ad {
-        position: relative;
-        left: 55px;
-        top: 355px;
-        display: flex;
-        align-items: center;
-      }
-    </style>
-    </head>
-    <body>
-  <div class='page'>
-    <div class='page-content'>
-      <div class='ad'>"
-    file << "<div>This letter has been brought to you by the fine folks at:</div><pre style='font-size:6px;'>#{@output}</pre>"
-    file << "</div></div></body></html>"
-    file.close
   end
 
   def clampDimensions(width, height)

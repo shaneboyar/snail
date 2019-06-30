@@ -33,10 +33,6 @@ class User < ApplicationRecord
     following.include?(other_user)
   end
 
-  def has_friends?
-    following.length > 0
-  end
-
   # Returns a user's status feed.
   def feed
     following_ids = "SELECT followed_id FROM relationships

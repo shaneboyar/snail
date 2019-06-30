@@ -24,7 +24,7 @@ class CreateFeedMailer
     File.delete(@filename) if File.exist?(@filename)
   end
 
-  # private
+  private
 
   def create
     view = ActionView::Base.new(ActionController::Base.view_paths, {
