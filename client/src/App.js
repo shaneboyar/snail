@@ -26,6 +26,16 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const href = window.location.href;
+    const split = href.split('/');
+    const route = split[split.length - 1];
+    const cleanedRoute = route.split('?')[0];
+    if (cleanedRoute === 'about') {
+      setView('about');
+    }
+  }, []);
+
   const renderView = () => {
     if (view === 'about') return <LandingPage />;
     if (jwt) {
