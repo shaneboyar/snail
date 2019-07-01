@@ -3,6 +3,7 @@ import PeopleIcon from '@material-ui/icons/People';
 import CloseIcon from '@material-ui/icons/Close';
 
 import './App.css';
+import LandingPage from './LandingPage';
 import Authentication from './components/Authentication';
 import PostMachine from './components/PostMachine';
 import AddFriend from './components/AddFriend';
@@ -26,6 +27,7 @@ function App() {
   }, []);
 
   const renderView = () => {
+    if (view === 'about') return <LandingPage />;
     if (jwt) {
       return view === 'post' ? (
         <PostMachine jwt={jwt} />
@@ -43,6 +45,7 @@ function App() {
             }
             setJwt(token);
           }}
+          switchTo={view => setView(view)}
         />
       );
     }
@@ -61,7 +64,7 @@ function App() {
   return (
     <div className="App">
       <div className="Login-container">{jwt && renderMenuIcon()}</div>
-      <header className="App-header">{renderView()}</header>
+      <div>{renderView()}</div>
     </div>
   );
 }
