@@ -11,6 +11,7 @@
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "react-spring": "^8.0.25",
+    "react-svg": "^10.0.12",
     "react-textarea-autosize": "^7.1.0"
   },
   "scripts": {

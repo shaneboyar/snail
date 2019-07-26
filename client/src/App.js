@@ -3,13 +3,13 @@ import PeopleIcon from '@material-ui/icons/People';
 import CloseIcon from '@material-ui/icons/Close';
 
 import './App.css';
-import LandingPage from './LandingPage';
+import LandingPage from './landingPage/LandingPage';
 import Authentication from './components/Authentication';
 import PostMachine from './components/PostMachine';
 import AddFriend from './components/AddFriend';
 
 function App() {
-  const [view, setView] = useState('post');
+  const [view, setView] = useState('about');
   const [jwt, setJwt] = useState(null);
 
   useEffect(() => {
