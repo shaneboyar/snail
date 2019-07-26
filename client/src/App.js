@@ -63,13 +63,13 @@ function App() {
   };
 
   const renderMenuIcon = () =>
-    view === 'post' ? (
+    view === 'profile' ? (
+      <CloseIcon onClick={() => setView('post')} className="addFriendIcon" />
+    ) : (
       <PeopleIcon
         onClick={() => setView('profile')}
         className="addFriendIcon"
       />
-    ) : (
-      <CloseIcon onClick={() => setView('post')} className="addFriendIcon" />
     );
 
   return (
