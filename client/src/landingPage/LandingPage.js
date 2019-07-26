@@ -8,17 +8,17 @@ import officeImage from '../images/office.jpeg';
 
 import './styles.css';
 
-const LandingPage = () => (
+const LandingPage = ({ onStart }) => (
   <div className="wrapper">
     <div className="triangle" />
     <div className="header">
       <div className="container">
         <div className="headerContent">
           <LogoType />
-          <div className="navItems">
+          {/* <div className="navItems">
             <div className="navItem">Register</div>
             <div className="navItem">Log In</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
@@ -50,7 +50,9 @@ const LandingPage = () => (
           forever preserved in print.
         </p>
         <p>Plus, who doesn’t love getting a letter in the mail? :-)</p>
-        <div className="button">Get Started</div>
+        <div className="button" onClick={onStart}>
+          Get Started
+        </div>
       </section>
       <section className="about">
         <div>

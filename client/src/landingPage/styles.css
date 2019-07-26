@@ -119,6 +119,10 @@ section.description {
   justify-content: center;
 }
 
+.button:hover {
+  cursor: pointer;
+}
+
 section.about {
   display: flex;
   justify-content: space-between;

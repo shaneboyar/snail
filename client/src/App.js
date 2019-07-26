@@ -37,7 +37,8 @@ function App() {
   }, []);
 
   const renderView = () => {
-    if (view === 'about') return <LandingPage />;
+    if (view === 'about')
+      return <LandingPage onStart={() => setView('authenticate')} />;
     if (jwt) {
       return view === 'post' ? (
         <PostMachine jwt={jwt} />
