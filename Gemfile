@@ -32,6 +32,7 @@ gem 'rack-cors'
 # Used for address verification and mailing service
 gem 'lob'
 gem 'ascii-image'
+gem 'whenever'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

@@ -37,8 +37,10 @@ class User < ApplicationRecord
   def feed
     following_ids = "SELECT followed_id FROM relationships
                      WHERE  follower_id = :user_id"
-    Post.where("user_id IN (#{following_ids})
-                     OR user_id = :user_id", user_id: id)
+    Post.joins(:user)
+        .group("users.name, posts.id")
+        .where("user_id IN (#{following_ids})", user_id: id).where("posts.created_at > ?", 1.week.ago)
+        .select('posts.*, users.name').group_by(&:name)
   end
 
 end
