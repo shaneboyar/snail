@@ -13,6 +13,7 @@
 }
 
 .AddFriend-container {
+  height: 100vh;
   display: flex;
   width: 100%;
   align-items: center;
@@ -40,6 +41,7 @@
 }
 
 .Input-container {
+  height: 100vh;
   display: flex;
   width: 100%;
   align-items: center;
