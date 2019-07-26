@@ -40,10 +40,10 @@ function App() {
     if (view === 'about')
       return <LandingPage onStart={() => setView('authenticate')} />;
     if (jwt) {
-      return view === 'post' ? (
-        <PostMachine jwt={jwt} />
-      ) : (
+      return view === 'profile' ? (
         <AddFriend jwt={jwt} />
+      ) : (
+        <PostMachine jwt={jwt} />
       );
     } else {
       return (
