@@ -9,7 +9,7 @@ import PostMachine from './components/PostMachine';
 import AddFriend from './components/AddFriend';
 
 function App() {
-  const [view, setView] = useState('about');
+  const [view, setView] = useState(null);
   const [jwt, setJwt] = useState(null);
 
   useEffect(() => {
@@ -37,28 +37,34 @@ function App() {
   }, []);
 
   const renderView = () => {
-    if (view === 'about')
-      return <LandingPage onStart={() => setView('authenticate')} />;
     if (jwt) {
-      return view === 'profile' ? (
-        <AddFriend jwt={jwt} />
-      ) : (
-        <PostMachine jwt={jwt} />
-      );
+      if (view === 'about') {
+        return <LandingPage onStart={() => setView('authenticate')} />;
+      } else {
+        return view === 'profile' ? (
+          <AddFriend jwt={jwt} />
+        ) : (
+          <PostMachine jwt={jwt} />
+        );
+      }
     } else {
-      return (
-        <Authentication
-          onLogin={(data, rememberMe = false) => {
-            const { token, exp } = data;
-            if (rememberMe) {
-              const savedToken = { token, exp };
-              localStorage.setItem('jwt', JSON.stringify(savedToken));
-            }
-            setJwt(token);
-          }}
-          switchTo={view => setView(view)}
-        />
-      );
+      if (view === 'authenticate') {
+        return (
+          <Authentication
+            onLogin={(data, rememberMe = false) => {
+              const { token, exp } = data;
+              if (rememberMe) {
+                const savedToken = { token, exp };
+                localStorage.setItem('jwt', JSON.stringify(savedToken));
+              }
+              setJwt(token);
+            }}
+            switchTo={view => setView(view)}
+          />
+        );
+      } else {
+        return <LandingPage onStart={() => setView('authenticate')} />;
+      }
     }
   };
 
