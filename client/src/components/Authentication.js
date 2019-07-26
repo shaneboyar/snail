@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignIn = ({ switchToSignUp, signInAction }) => {
+const SignIn = ({ switchTo, signInAction }) => {
   const { inputs, handleInputChange, handleSubmit } = useForm(signInAction);
   const classes = useStyles();
 
@@ -46,7 +46,7 @@ const SignIn = ({ switchToSignUp, signInAction }) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Logo />
+        <Logo onClick={() => switchTo('about')} />
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
@@ -105,7 +105,7 @@ const SignIn = ({ switchToSignUp, signInAction }) => {
               </Link>
             </Grid>
             <Grid item>
-              <Link onClick={switchToSignUp} variant="body2">
+              <Link onClick={() => switchTo('signUp')} variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -116,7 +116,7 @@ const SignIn = ({ switchToSignUp, signInAction }) => {
   );
 };
 
-const SignUp = ({ switchToSignIn, signUpAction }) => {
+const SignUp = ({ switchTo, signUpAction }) => {
   const { inputs, handleInputChange, handleSubmit } = useForm(signUpAction);
   const classes = useStyles();
 
@@ -124,7 +124,7 @@ const SignUp = ({ switchToSignIn, signUpAction }) => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Logo />
+        <Logo onClick={() => switchTo('about')} />
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
@@ -190,7 +190,7 @@ const SignUp = ({ switchToSignIn, signUpAction }) => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link onClick={switchToSignIn} variant="body2">
+              <Link onClick={() => switchTo('signIn')} variant="body2">
                 {'Have an account? Sign In'}
               </Link>
             </Grid>
@@ -201,7 +201,7 @@ const SignUp = ({ switchToSignIn, signUpAction }) => {
   );
 };
 
-const Authentication = ({ onLogin }) => {
+const Authentication = ({ onLogin, switchTo }) => {
   const [state, setState] = useState('signIn');
   const [toast, setToast] = useState(null);
 
@@ -237,12 +237,12 @@ const Authentication = ({ onLogin }) => {
       <div>{toast}</div>
       {state === 'signIn' ? (
         <SignIn
-          switchToSignUp={() => setState('signUp')}
+          switchTo={switchTo}
           signInAction={inputs => signInAction(inputs)}
         />
       ) : (
         <SignUp
-          switchToSignIn={() => setState('signIn')}
+          switchTo={switchTo}
           signUpAction={inputs => signUpAction(inputs)}
         />
       )}
